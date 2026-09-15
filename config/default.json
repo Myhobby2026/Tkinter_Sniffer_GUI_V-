@@ -1,0 +1,22 @@
+{
+  "app": {
+    "name": "Universal Sniffer",
+    "version": "0.1.0"
+  },
+  "gui": {
+    "theme": "dark",
+    "ui_poll_ms": 50,
+    "window_title": "Universal Sniffer"
+  },
+  "logging": {
+    "level": "INFO",
+    "console": true,
+    "file": true,
+    "log_dir": "logs"
+  },
+  "paths": {
+    "captures": "captures",
+    "exports": "exports",
+    "logs": "logs"
+  }
+}

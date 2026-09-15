@@ -1,0 +1,25 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+build/
+dist/
+.venv/
+venv/
+
+# Test / coverage
+.pytest_cache/
+.coverage
+coverage/
+htmlcov/
+
+# Runtime data (never commit captures or logs)
+captures/
+logs/
+exports/
+
+# OS / editor
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/

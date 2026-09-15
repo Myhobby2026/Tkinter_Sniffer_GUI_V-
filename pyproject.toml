@@ -1,0 +1,46 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "universal-sniffer"
+version = "0.1.0"
+description = "Professional desktop electronics sniffer / logic analyzer / protocol analyzer with a Teensy 4.1 capture bridge"
+readme = "README.md"
+requires-python = ">=3.11"
+license = { text = "MIT" }
+authors = [{ name = "Universal Sniffer contributors" }]
+keywords = ["logic-analyzer", "protocol-analyzer", "teensy", "tkinter", "electronics"]
+classifiers = [
+    "Development Status :: 2 - Pre-Alpha",
+    "Intended Audience :: Developers",
+    "Intended Audience :: Science/Research",
+    "Operating System :: Microsoft :: Windows",
+    "Programming Language :: Python :: 3 :: Only",
+    "Topic :: Scientific/Engineering :: Instrumentation",
+]
+# 3.12+ is the recommended runtime; 3.11 is supported for development.
+dependencies = [
+    "numpy>=1.26",
+    "pyserial>=3.5",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.0",
+    "pytest-cov>=5.0",
+]
+
+[project.scripts]
+universal-sniffer = "app.main:main"
+
+[tool.setuptools.packages.find]
+include = ["app*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["."]
+addopts = "-q"
+markers = [
+    "gui: GUI tests (require a display and tkinter)",
+]
