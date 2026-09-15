@@ -256,12 +256,25 @@ class PanedWindow(_Widget):
         self._panes[id(pane)] = pane
 
     def configure(self, pane=None, **kw) -> None:
-        if pane is not None:
-            if id(pane) not in self._panes:
-                raise TclError(f"bad pane (not added): {pane!r}")
-            unknown = set(kw) - _TTK_PANE_OPTIONS
-            if unknown:
-                raise TclError(f"bad option {sorted(unknown)[0]} in 'configure'")
+        if isinstance(pane, _Widget):
+            # Real Tk (all versions): PanedWindow.configure() does NOT take a
+            # pane positionally — the inherited tk configure consumes it as an
+            # options source and Tcl fails with "unknown option -...".
+            # Use pane(pane, **opts) instead.
+            raise TclError(
+                "unknown option (a pane was passed to configure; "
+                "use .pane(pane, width=..., minsize=...) instead)"
+            )
+
+    def pane(self, pane, option=None, **kw) -> None:
+        """Documented ttk API: per-pane options (integer index or subwindow)."""
+        if id(pane) not in self._panes:
+            raise TclError(f"bad pane (not added): {pane!r}")
+        if option is not None:
+            kw[option] = None
+        unknown = set(kw) - _TTK_PANE_OPTIONS
+        if unknown:
+            raise TclError(f"bad option {sorted(unknown)[0]} in 'pane'")
 
     def panes(self) -> tuple:
         return tuple(self._panes.values())

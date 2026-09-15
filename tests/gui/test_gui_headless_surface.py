@@ -45,10 +45,14 @@ def test_mock_catches_bad_panedwindow_subcommand(tk):
     pw = tk.ttk.PanedWindow(root)
     child = tk.ttk.Frame(pw)
     pw.add(child, weight=1)
-    with pytest.raises(Exception):  # AttributeError from mock; TclError in real Tk
+    # 'paneconfigure' is not a ttk subcommand (classic tk only)
+    with pytest.raises(Exception):
         pw.paneconfigure(child, width=100)
-    # and the real vocabulary works:
-    pw.configure(child, width=100, minsize=50)
+    # configure() must not accept a pane positionally (tk-style corruption)
+    with pytest.raises(tk.TclError):
+        pw.configure(child, width=100)
+    # the documented API works:
+    pw.pane(child, width=100, minsize=50)
 
 
 def test_mock_catches_undeclared_treeview_column(tk):
