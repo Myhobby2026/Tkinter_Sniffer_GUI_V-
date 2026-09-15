@@ -36,7 +36,7 @@ status bar (`Device / Capture / Capture Integrity`).
 .venv/bin/python -m pytest tests/gui           # GUI tests (skip w/o display)
 ```
 
-Baseline at Phase 1: **99 passed, 1 skipped** (GUI test, needs a display).
+Baseline at Phase 1: **106 passed, 1 skipped** (GUI test, needs a display).
 
 ## Conventions
 

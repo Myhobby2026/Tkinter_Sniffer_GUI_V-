@@ -145,8 +145,11 @@ class MainWindow:
         self._sb_msg.pack(side="right", padx=8)
 
     # -------------------------------------------------------------- commands
-    def _on_command(self, command: Command) -> None:
-        """View → application boundary: the ONLY path from widgets to logic."""
+    def _on_command(self, command: Command):
+        """View → application boundary: the ONLY path from widgets to logic.
+
+        Returns the CommandResult so views/tests can react to the outcome.
+        """
         result = self._controller.execute(command)
         if command.name == Cmd.HELP_ABOUT and result.ok:
             data = result.data
@@ -161,6 +164,7 @@ class MainWindow:
             messagebox.showinfo("Diagnostics", json.dumps(result.data, indent=2, default=str))
         elif command.name == Cmd.APP_QUIT and result.ok:
             self._on_close()
+        return result
 
     # -------------------------------------------------------------- poll loop
     def _poll(self) -> None:

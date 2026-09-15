@@ -60,13 +60,15 @@ class PanelManager:
         top.add(left, weight=0)
         top.add(center, weight=1)
         top.add(right, weight=0)
-        top.paneconfigure(left, width=self._LEFT_WIDTH, minsize=180)
-        top.paneconfigure(right, width=self._RIGHT_WIDTH, minsize=220)
+        # ttk::panedwindow uses configure(?pane? ...) — there is NO 'paneconfigure'
+        # subcommand (that one belongs to the classic tk PanedWindow).
+        top.configure(left, width=self._LEFT_WIDTH, minsize=180)
+        top.configure(right, width=self._RIGHT_WIDTH, minsize=220)
 
         bottom = self._container(outer, "transactions", "Transactions")
         outer.add(top, weight=3)
         outer.add(bottom, weight=1)
-        outer.paneconfigure(bottom, height=self._BOTTOM_HEIGHT, minsize=140)
+        outer.configure(bottom, height=self._BOTTOM_HEIGHT, minsize=140)
         return outer
 
     def _container(self, host: tk.Widget, panel_id: str, title: str) -> ttk.Labelframe:

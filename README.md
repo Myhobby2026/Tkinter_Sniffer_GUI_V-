@@ -38,7 +38,7 @@ hardware-free development.
 - **GUI architecture**: zero logic in callbacks — menus/toolbar emit
   `Command`s to a pure-Python controller; workers talk to the GUI only
   through a thread-safe `UiEventQueue` pumped at 50 ms (§8/§43).
-- **Tests**: 99 passing / 1 display-skipped — unit, integration (real
+- **Tests**: 106 passing / 1 display-skipped — unit, integration (real
   threading), protocol-contract, and GUI smoke suites; runs with **zero
   hardware** required.
 

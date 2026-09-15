@@ -475,7 +475,7 @@ USB implementation, .usn persistence, firmware.
 
 ### Verification evidence (this change)
 
-- `pytest`: **99 passed, 1 skipped** (GUI test, no display in sandbox), 0 failed.
+- `pytest`: **106 passed, 1 skipped** (GUI test, no display in sandbox), 0 failed.
 - Headless app smoke: connect → 1 MS/s × 4 ch capture → stop → integrity OK.
 - Syntax: `py_compile` clean across `app/` and `tests/`.
 - GUI visual check requires a display (Windows target): `python -m app.main`.
