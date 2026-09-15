@@ -40,7 +40,7 @@ def _build_window(tk):
 
 # --------------------------------------------------------------- meta-tests
 def test_mock_catches_bad_panedwindow_subcommand(tk):
-    """Meta: the mock must reject what real Tk rejects (else tests are void)."""
+    """Meta: the mock must reject what real Tk 8.6 rejects (else tests are void)."""
     root = tk.Tk()
     pw = tk.ttk.PanedWindow(root)
     child = tk.ttk.Frame(pw)
@@ -51,8 +51,12 @@ def test_mock_catches_bad_panedwindow_subcommand(tk):
     # configure() must not accept a pane positionally (tk-style corruption)
     with pytest.raises(tk.TclError):
         pw.configure(child, width=100)
-    # the documented API works:
-    pw.pane(child, width=100, minsize=50)
+    # -width/-height are not ttk::panedwindow pane options in Tk 8.6
+    with pytest.raises(tk.TclError):
+        pw.pane(child, width=100)
+    # the portable, 8.6-verified idiom works: weight + requested size
+    pw.pane(child, weight=1)
+    pw.add(child, weight=0)
 
 
 def test_mock_catches_undeclared_treeview_column(tk):

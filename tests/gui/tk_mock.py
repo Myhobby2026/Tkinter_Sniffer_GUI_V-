@@ -231,8 +231,11 @@ class BooleanVar(_Var):
 # ---------------------------------------------------------------------------
 # ttk
 # ---------------------------------------------------------------------------
-_TTK_PANE_OPTIONS = {"width", "height", "minsize", "maxsize", "weight",
-                     "padding", "stretch", "side", "show", "hide"}
+# ttk::panedwindow 8.6 pane options. NOTE: -width/-height are classic
+# tk::panedwindow-only and are REJECTED by ttk in Tk 8.6 ("unknown option").
+_TTK_PANE_OPTIONS = {"weight", "minsize", "maxsize", "padding",
+                     "stretch", "side", "show", "hide"}
+_TTK_ADD_OPTIONS = _TTK_PANE_OPTIONS | {"before", "after"}
 
 
 class PanedWindow(_Widget):
@@ -250,7 +253,7 @@ class PanedWindow(_Widget):
         self._panes: dict[int, object] = {}
 
     def add(self, pane, **kw) -> None:
-        unknown = set(kw) - _TTK_PANE_OPTIONS
+        unknown = set(kw) - _TTK_ADD_OPTIONS
         if unknown:
             raise TclError(f"bad option {sorted(unknown)[0]} in 'add'")
         self._panes[id(pane)] = pane
@@ -260,21 +263,23 @@ class PanedWindow(_Widget):
             # Real Tk (all versions): PanedWindow.configure() does NOT take a
             # pane positionally — the inherited tk configure consumes it as an
             # options source and Tcl fails with "unknown option -...".
-            # Use pane(pane, **opts) instead.
             raise TclError(
                 "unknown option (a pane was passed to configure; "
-                "use .pane(pane, width=..., minsize=...) instead)"
+                "control pane size via weight/requested size instead)"
             )
 
     def pane(self, pane, option=None, **kw) -> None:
-        """Documented ttk API: per-pane options (integer index or subwindow)."""
+        """Documented ttk API: per-pane options (integer index or subwindow).
+
+        Tk 8.6 rejects -width/-height here (classic-tk-only options)."""
         if id(pane) not in self._panes:
             raise TclError(f"bad pane (not added): {pane!r}")
         if option is not None:
             kw[option] = None
         unknown = set(kw) - _TTK_PANE_OPTIONS
         if unknown:
-            raise TclError(f"bad option {sorted(unknown)[0]} in 'pane'")
+            raise TclError(f"bad option {sorted(unknown)[0]} in 'pane' "
+                           f"(-width/-height are not ttk options)")
 
     def panes(self) -> tuple:
         return tuple(self._panes.values())

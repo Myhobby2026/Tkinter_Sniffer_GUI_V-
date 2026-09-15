@@ -28,7 +28,9 @@ def _make_treeview(parent, columns, headings, widths):
 
 DEVICE_COLUMNS = ("device", "state", "firmware")
 DEVICE_HEADINGS = ("Device", "State", "Firmware")
-DEVICE_WIDTHS = (150, 80, 80)
+# Column widths set the panel's REQUESTED width (the left pane is weight=0,
+# so it keeps ~230 px initial width in the PanedWindow).
+DEVICE_WIDTHS = (110, 60, 60)
 
 
 def build_device_panel(parent: tk.Widget) -> tk.Widget:
