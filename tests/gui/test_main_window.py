@@ -34,6 +34,7 @@ def app(monkeypatch, tmp_path):
 
 def test_window_builds_with_all_panels(root, app):
     from app.gui.main_window import MainWindow
+    from app.gui.panels import standard
 
     win = MainWindow(root, app)
     root.update()
@@ -43,6 +44,27 @@ def test_window_builds_with_all_panels(root, app):
     assert widgets["transactions"].transactions_tree is not None
     root.update_idletasks()
     win._poll()
+
+
+def test_treeview_columns_are_consistent(root, app):
+    """Regression: every heading()/column() target must be a declared column
+    (this failed with TclError 'Invalid column index device' on first run)."""
+    from app.gui.main_window import MainWindow
+    from app.gui.panels import standard
+
+    win = MainWindow(root, app)
+    root.update()
+    device_tree = win._panel_widgets["device"].device_tree
+    assert device_tree["columns"] == standard.DEVICE_COLUMNS
+    n = len(standard.DEVICE_COLUMNS)
+    assert n == len(standard.DEVICE_HEADINGS) == len(standard.DEVICE_WIDTHS)
+    # heading() for each declared column must resolve without TclError
+    for col in standard.DEVICE_COLUMNS:
+        device_tree.heading(col)
+    txn_tree = win._panel_widgets["transactions"].transactions_tree
+    assert txn_tree["columns"] == standard.TRANSACTION_COLUMNS
+    for col in standard.TRANSACTION_COLUMNS:
+        txn_tree.heading(col)
 
 
 def test_full_gui_flow_connect_capture_stop(root, app):

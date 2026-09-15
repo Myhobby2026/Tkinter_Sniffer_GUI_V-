@@ -16,16 +16,26 @@ def _palette(widget: tk.Widget) -> dict[str, str]:
         return {}
 
 
+def _make_treeview(parent, columns, headings, widths):
+    """Treeview where columns/headings/widths are a single source of truth —
+    heading() can never reference an undeclared column (regression guard)."""
+    tree = ttk.Treeview(parent, columns=columns, show="headings")
+    for col, heading, width in zip(columns, headings, widths):
+        tree.heading(col, text=heading)
+        tree.column(col, width=width, anchor="w", stretch=False)
+    return tree
+
+
+DEVICE_COLUMNS = ("device", "state", "firmware")
+DEVICE_HEADINGS = ("Device", "State", "Firmware")
+DEVICE_WIDTHS = (150, 80, 80)
+
+
 def build_device_panel(parent: tk.Widget) -> tk.Widget:
     """Left: device / channel list (device management fills this in Phase 3+)."""
     frame = ttk.Frame(parent)
-    tree = ttk.Treeview(frame, columns=("state", "firmware"), show="headings", height=12)
-    tree.heading("device", text="Device")
-    tree.heading("state", text="State")
-    tree.heading("firmware", text="Firmware")
-    tree.column("device", width=150, anchor="w", stretch=False)
-    tree.column("state", width=80, anchor="w")
-    tree.column("firmware", width=80, anchor="w")
+    tree = _make_treeview(frame, DEVICE_COLUMNS, DEVICE_HEADINGS, DEVICE_WIDTHS)
+    tree.configure(height=12)
     tree.pack(fill="both", expand=True, padx=4, pady=4)
     frame.device_tree = tree  # type: ignore[attr-defined]
     return frame
@@ -73,10 +83,9 @@ def build_transactions_panel(parent: tk.Widget) -> tk.Widget:
         text="Transaction table — placeholder (Phase 12: virtualized rows, search, jump-to-waveform)",
         style="Muted.TLabel",
     ).pack(anchor="w", padx=6, pady=(4, 0))
-    tree = ttk.Treeview(frame, columns=TRANSACTION_COLUMNS, show="headings", height=5)
-    for col, heading in zip(TRANSACTION_COLUMNS, TRANSACTION_HEADINGS):
-        tree.heading(col, text=heading)
-        tree.column(col, width=95, anchor="w", stretch=False)
+    widths = (95,) * len(TRANSACTION_COLUMNS)
+    tree = _make_treeview(frame, TRANSACTION_COLUMNS, TRANSACTION_HEADINGS, widths)
+    tree.configure(height=5)
     tree.pack(fill="both", expand=True, padx=4, pady=4)
     frame.transactions_tree = tree  # type: ignore[attr-defined]
     return frame
