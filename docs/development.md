@@ -16,7 +16,9 @@ python -m venv .venv
 ## Run
 
 ```bash
-.venv/bin/python -m app.main                 # GUI (dark theme)
+.venv/bin/python -m app.main                 # GUI (dark theme) — from repo root
+.venv/bin/python app/main.py                 # script mode (equivalent)
+.venv/bin/python run.py                      # convenience launcher
 .venv/bin/python -m app.main --theme light
 .venv/bin/python -m app.main --config my.json
 .venv/bin/python -m app.main --version

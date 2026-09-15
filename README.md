@@ -46,9 +46,17 @@ hardware-free development.
 
 ```bash
 python -m venv .venv
-.venv/bin/pip install -r requirements-dev.txt
-.venv/bin/python -m app.main            # or: universal-sniffer
+.venv/bin/pip install -r requirements.txt   # numpy + pyserial (Tkinter is built into Windows Python)
+.venv/bin/python -m app.main                # GUI, from the repo root
+.venv/bin/python app/main.py                # same — script mode works too
+.venv/bin/python run.py --theme light       # convenience launcher
+.venv/bin/python -m app.main --version
 ```
+
+> Canonical form is `python -m app.main` from the repository root. Running
+> `python main.py` from inside `app/` also works now (script-mode shim).
+> The GUI needs the OS Python's Tk — on Windows it ships with python.org
+> installs; on Debian/Ubuntu: `sudo apt install python3-tk`.
 
 Then in the GUI: **Devices → Connect: Simulator** → **Capture → Start** →
 watch the status bar → **Capture → Stop**.

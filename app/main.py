@@ -1,6 +1,7 @@
 """Application entry point (spec §57 Phase 1: basic Tkinter application).
 
-    python -m app.main            # run the GUI
+    python -m app.main            # run the GUI (from the repo root)
+    python app/main.py            # also works (script mode, shim below)
     universal-sniffer             # console script (pyproject)
     universal-sniffer --version
 
@@ -16,7 +17,18 @@ graph) can be imported and tested in headless environments.
 from __future__ import annotations
 
 import argparse
+import sys
 from pathlib import Path
+
+# --- script-mode shim -------------------------------------------------------
+# `python app/main.py` (or `python main.py` from inside app/) has no package
+# context, so the relative imports below would fail. Restore it by putting
+# the repo root on sys.path and declaring this module's package.
+# `python -m app.main` already has __package__ == "app" and skips this.
+if __package__ in (None, ""):
+    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+    __package__ = "app"
+# -----------------------------------------------------------------------------
 
 from . import APP_NAME, __version__
 from .config import AppConfig, load_config
